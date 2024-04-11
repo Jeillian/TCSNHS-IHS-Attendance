@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="homestyle.css" />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo"></div>
+        <ul class="menu">
+            <li class="active">
+                <a href="#" onclick="loadContent('dashboard-content', this)">
+                    <i class="fas fa-desktop"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="loadContent('attendance-content', this)">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Attendance</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="loadContent('add-class-content', this)">
+                    <i class="fas fa-school"></i>
+                    <span>Add class</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="loadContent('add-student-content', this)">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Add student</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="loadContent('report-content', this)">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Attendance Record</span>
+                </a>
+            </li>
+            <li id="logout" class="logout"><a href="#">Log out</a></li>
+        </ul>
+     </div>
+
+     <div class="main--content" id="mainContent">
+        <div id="dashboard-content">
+            <div class="header--wrapper">
+                <h2 class="add-class-title">Tagaytay City Science National High School - Integrated Senior High School</h>
+            </div>
+        </div>
+         <div id="attendance-content" style="display: none;">
+            <div class="add-class-header">
+                <h2 class="add-class-title">Tagaytay City Science National High School - Integrated Senior High School</h2>
+            </div>
+            <div class="header--attendance">
+                <div class="header--title">Attendance:</div>
+                <div class="attendance-date">
+                    <label for="attendanceDate">Date:</label>
+                    <input type="date" id="attendanceDate" value="">
+                </div>
+            </div>
+                <div class="attendance-row">
+                    <div class="attendance-label">
+                        <label for="class-select">Class:</label>
+                        <select id="class-select" class="attendance-select" onchange="filterAttendanceData()">
+                        </select>
+                        <button onclick="deleteClass(this)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>                        
+                    </div>
+                </div>
+                <div class="table-section">
+                    <table id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Gender</th>
+                                <th>Class</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceTableBody">
+                            <td>
+                                <select onchange="updateStatus(this)">
+                                    <option value="Absent">Absent</option>
+                                    <option value="Present">Present</option>
+                                    <option value="Late">Late</option>
+                                    <option value="Excuse">Excuse</option>
+                                </select>
+                            </td>
+                            
+                        </tbody>
+                    </table>
+                    <button onclick="saveAttendance()">Save Attendance</button>
+                 </div>
+         </div>
+         <div id="add-class-content" style="display: none;">
+            <div class="add-class-header">
+                <h2 class="add-class-title">Tagaytay City Science National High School - Integrated Senior High School</h2>
+            </div>
+            <div class="header--attendance">
+                <div class="header--title">Add Class:</div>
+            </div>
+            <div class="container">
+                <form id="addClassForm">
+                    <div class="form-container">
+                        <label for="className">Class Name:</label>
+                        <input type="text" id="className" name="className">
+                    </div>
+            </div>                   
+                    <div class="button-container">
+                        <button class="button" type="submit">Add Class</button>
+                    </div>
+                </form>
+         </div>
+         <div id="add-student-content" style="display: none;">
+            <div class="add-student-header">
+                <h2 class="add-student-title">Tagaytay City Science National High School - Integrated Senior High School</h2>
+            </div>
+            <div class="header--attendance">
+                <div class="header--title">Add Student:</div>
+            </div>
+            <form id="addStudentForm">
+                <div class="container">
+                    <div class="form-container">
+                        <label for="studentName">Student Name:</label>
+                        <input type="text" id="studentName" name="studentName">
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="form-container">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="form-container select">
+                        <label for="classSelect">Select Class:</label>
+                        <select id="classSelect" name="classSelect">
+                            
+                        </select>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <button class="button" type="submit">Add Student</button>
+                </div>
+            </form>
+         </div>
+<div id="report-content" style="display: none;">
+    <div class="add-student-header">
+        <h2 class="add-student-title">Tagaytay City Science National High School - Integrated Senior High School</h2>
+    </div>
+    <div class="header--attendance">
+        <div class="header--title">Attendance Record:</div>
+    </div>
+    <div class="class-selection">
+        <label for="reportClass">Select Class:</label>
+        <select id="reportClass" onchange="updateReportByClass(this)">
+        </select>
+    </div>
+    <div class="date-selection">
+        <label for="reportDate">Select Date:</label>
+        <input type="date" id="reportDate" onchange="updateReportByDate(this)">
+    </div>
+    <div id="reportTableContainer"></div>
+    <button onclick="downloadReport()">Download Report</button>
+</div>
+
+     </div>
+
+     <script>
+        let classList = [];
+
+        let attendanceData = [];
+
+        function updateClassOptions() {
+            const classSelectAttendance = document.getElementById('class-select');
+            const classSelectAddStudent = document.getElementById('classSelect');
+
+            classSelectAttendance.innerHTML = ''; 
+            classSelectAddStudent.innerHTML = ''; 
+
+            classList.forEach(className => {
+                const optionAttendance = document.createElement('option');
+                optionAttendance.value = className;
+                optionAttendance.textContent = className;
+                classSelectAttendance.appendChild(optionAttendance);
+
+                const optionAddStudent = document.createElement('option');
+                optionAddStudent.value = className;
+                optionAddStudent.textContent = className;
+                classSelectAddStudent.appendChild(optionAddStudent);
+            });
+        }
+
+        function handleAddClassForm(event) {
+            event.preventDefault(); 
+
+            const classNameInput = document.getElementById('className');
+            const className = classNameInput.value.trim();
+
+            if (className) {
+                classList.push(className); 
+                updateClassOptions(); 
+                classNameInput.value = ''; 
+
+                // Save the class list to local storage
+                localStorage.setItem('classList', JSON.stringify(classList));
+
+                console.log('Class added successfully:', className);
+            } else {
+                alert('Please enter a valid class name.');
+            }
+        }
+
+        function handleAddStudentForm(event) {
+            event.preventDefault(); 
+            const studentNameInput = document.getElementById('studentName');
+            const genderSelect = document.getElementById('gender');
+            const classSelect = document.getElementById('classSelect');
+
+            const studentName = studentNameInput.value.trim();
+            const gender = genderSelect.value;
+            const className = classSelect.value;
+
+            if (studentName && gender && className) {
+                const newRow = attendanceTableBody.insertRow();
+                newRow.innerHTML = `
+                    <td>${studentName}</td>
+                    <td>${gender}</td>
+                    <td>${className}</td>
+                    <td>Pending</td>
+                    <td><button onclick="deleteStudent(this)">Delete</button></td>
+                `;
+
+                const studentData = {
+                    name: studentName,
+                    gender,
+                    class: className,
+                    status: 'Pending'
+                };
+                attendanceData.push(studentData);
+                localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+
+                studentNameInput.value = '';
+                genderSelect.selectedIndex = 0;
+                classSelect.selectedIndex = 0;
+
+                console.log('Student added successfully:', studentName, gender, className);
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        function loadContent(contentId, clickedLink) {
+            const mainContent = document.getElementById("mainContent");
+
+            const contentDivs = mainContent.querySelectorAll("div[id$='-content']");
+            contentDivs.forEach(div => div.style.display = "none");
+
+            const selectedContent = document.getElementById(contentId);
+            if (selectedContent) {
+                selectedContent.style.display = "block";
+
+                const menuItems = document.querySelectorAll(".menu li");
+                menuItems.forEach(item => item.classList.remove("active"));
+                if (clickedLink) {
+                    clickedLink.closest("li").classList.add("active");
+                }
+
+                if (contentId === 'attendance-content') {
+                    attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || [];
+                    const attendanceTableBody = document.getElementById('attendanceTableBody');
+                    attendanceTableBody.innerHTML = '';
+                    attendanceData.forEach(studentData => {
+                        const newRow = attendanceTableBody.insertRow();
+                        newRow.innerHTML = `
+                        <td>${studentData.name}</td>
+                        <td>${studentData.gender}</td>
+                        <td>${studentData.class}</td>
+                        <td>
+                         <select onchange="updateStatus(this)">
+                           <option value="Absent" ${studentData.status === 'Absent' ? 'selected' : ''}>Absent</option>
+                           <option value="Present" ${studentData.status === 'Present' ? 'selected' : ''}>Present</option>
+                           <option value="Late" ${studentData.status === 'Late' ? 'selected' : ''}>Late</option>
+                           <option value="Excuse" ${studentData.status === 'Excuse' ? 'selected' : ''}>Excuse</option>
+                         </select>
+        </td>
+        <td><button onclick="deleteStudent(this)"><i class="fas fa-trash-alt"></i></button></td>
+                        `;
+                    });
+                } else if (contentId === 'add-student-content') {
+                    const addStudentForm = document.getElementById('addStudentForm');
+                    addStudentForm.addEventListener('submit', handleAddStudentForm);
+                }
+            }
+        }
+
+        function updateStatus(selectElement) {
+            const selectedStatus = selectElement.value;
+            const row = selectElement.closest('tr');
+            const studentName = row.cells[0].textContent;
+
+        const student = attendanceData.find(student => student.name === studentName);
+        if (student) {
+            student.status = selectedStatus;
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+            console.log('Status updated for', studentName, 'to', selectedStatus);
+        } else {
+           console.error('Student not found:', studentName);
+          }
+        }
+
+
+        function deleteStudent(button) {
+            const row = button.parentElement.parentElement;
+            const name = row.cells[0].textContent;
+            const className = row.cells[2].textContent;
+
+            row.remove();
+
+            attendanceData = attendanceData.filter(student => !(student.name === name && student.class === className));
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+
+            console.log('Student deleted successfully:', name);
+        }
+
+        function deleteClass(button) {
+            const selectedClass = document.getElementById('class-select');
+            const className = selectedClass.value;
+
+            const options = selectedClass.options;
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].textContent === className) {
+                    selectedClass.removeChild(options[i]);
+                    break;
+                }
+            }
+
+            const savedClassList = JSON.parse(localStorage.getItem('classList')) || [];
+            const updatedClassList = savedClassList.filter(name => name !== className);
+            localStorage.setItem('classList', JSON.stringify(updatedClassList));
+
+            console.log('Class deleted successfully:', className);
+        }
+
+        function filterAttendanceData() {
+            const selectedClass = document.getElementById('class-select').value;
+            const attendanceTable = document.getElementById('attendanceTable');
+            const rows = attendanceTable.rows;
+
+            for (let i = 1; i < rows.length; i++) {
+                const className = rows[i].cells[2].textContent;
+                if (className !== selectedClass) {
+                    rows[i].style.display = 'none';
+                } else {
+                    rows[i].style.display = '';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedClassList = localStorage.getItem('classList');
+            if (savedClassList) {
+                classList = JSON.parse(savedClassList);
+                updateClassOptions(); 
+            }
+
+            attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || [];
+            const attendanceTableBody = document.getElementById('attendanceTableBody');
+            attendanceData.forEach(studentData => {
+                const newRow = attendanceTableBody.insertRow();
+                newRow.innerHTML = `
+                    <td>${studentData.name}</td>
+                    <td>${studentData.gender}</td>
+                    <td>${studentData.class}</td>
+                    <td>${studentData.status}</td>
+                    <td><button onclick="deleteStudent(this)">Delete</button></td>
+                `;
+            });
+        });
+
+        function saveAttendance() {
+    const attendanceDateInput = document.getElementById('attendanceDate');
+    const attendanceDate = attendanceDateInput.value;
+    const attendanceTableBody = document.getElementById('attendanceTableBody');
+    const rows = attendanceTableBody.rows;
+
+    let existingAttendance = JSON.parse(localStorage.getItem('attendanceReport')) || [];
+    let isNewDate = true;
+
+    existingAttendance.forEach(entry => {
+        if (entry.date === attendanceDate) {
+            isNewDate = false;
+        }
+    });
+
+    if (isNewDate) {
+        const attendanceReport = [];
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].cells;
+            const name = cells[0].textContent;
+            const gender = cells[1].textContent;
+            const className = cells[2].textContent;
+            const status = cells[3].querySelector('select').value; 
+
+            attendanceReport.push({
+                date: attendanceDate,
+                name: name,
+                gender: gender,
+                class: className,
+                status: status
+            });
+        }
+
+        existingAttendance = existingAttendance.concat(attendanceReport);
+        localStorage.setItem('attendanceReport', JSON.stringify(existingAttendance));
+
+        updateReportContent(existingAttendance);
+
+        console.log('Attendance saved and report updated successfully.');
+    } else {
+        console.log('Attendance for this date already exists.');
+    }
+}
+
+function updateReportContent(attendanceData) {
+    const reportContent = document.getElementById('report-content');
+    const reportTable = document.createElement('table');
+    reportTable.innerHTML = `
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Class</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${attendanceData.map(student => `
+                <tr>
+                    <td>${student.date}</td>
+                    <td>${student.name}</td>
+                    <td>${student.gender}</td>
+                    <td>${student.class}</td>
+                    <td>${student.status}</td>
+                    <td><button onclick="deleteAttendance(this)">Trash</button></td>
+                </tr>
+            `).join('')}
+        </tbody>
+    `;
+
+    reportContent.innerHTML = ''; 
+    reportContent.appendChild(reportTable);
+}
+
+
+function deleteAttendance(button) {
+    const row = button.parentElement.parentElement;
+    const name = row.cells[1].textContent;
+    const date = row.cells[0].textContent;
+
+    let attendanceReport = JSON.parse(localStorage.getItem('attendanceReport')) || [];
+
+    attendanceReport = attendanceReport.filter(student => !(student.name === name && student.date === date));
+
+    localStorage.setItem('attendanceReport', JSON.stringify(attendanceReport));
+
+    updateReportContent(attendanceReport);
+
+    console.log('Attendance entry deleted successfully.');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const savedAttendanceData = JSON.parse(localStorage.getItem('attendanceReport')) || [];
+    updateReportContent(savedAttendanceData);
+});
+
+function updateReportByDate(selectElement) {
+    const selectedDate = selectElement.value;
+
+    const attendanceReport = JSON.parse(localStorage.getItem('attendanceReport')) || [];
+
+    const filteredAttendance = attendanceReport.filter(entry => entry.date === selectedDate);
+
+    updateReportContent(filteredAttendance);
+}
+
+function updateReportContent(attendanceData) {
+    const reportTableContainer = document.getElementById('reportTableContainer');
+    const reportTable = document.createElement('table');
+    reportTable.innerHTML = `
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Class</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${attendanceData.map(student => `
+                <tr>
+                    <td>${student.date}</td>
+                    <td>${student.name}</td>
+                    <td>${student.gender}</td>
+                    <td>${student.class}</td>
+                    <td>${student.status}</td>
+                    <td><button onclick="deleteAttendance(this)">Trash</button></td>
+                </tr>
+            `).join('')}
+        </tbody>
+    `;
+
+    reportTableContainer.innerHTML = ''; 
+    reportTableContainer.appendChild(reportTable);
+}
+
+
+function updateClassOptionsReport() {
+    const classSelectReport = document.getElementById('reportClass');
+    classSelectReport.innerHTML = ''; 
+
+    const attendanceReport = JSON.parse(localStorage.getItem('attendanceReport')) || [];
+
+    const classNames = [...new Set(attendanceReport.map(entry => entry.class))];
+
+    const optionAllClasses = document.createElement('option');
+    optionAllClasses.value = '';
+    optionAllClasses.textContent = 'All Classes';
+    classSelectReport.appendChild(optionAllClasses);
+
+    classNames.forEach(className => {
+        const optionClass = document.createElement('option');
+        optionClass.value = className;
+        optionClass.textContent = className;
+        classSelectReport.appendChild(optionClass);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateClassOptionsReport();
+});
+
+function updateReportByDateAndClass() {
+    const selectedDate = document.getElementById('reportDate').value;
+    const selectedClass = document.getElementById('reportClass').value;
+
+    const attendanceReport = JSON.parse(localStorage.getItem('attendanceReport')) || [];
+
+    const filteredAttendance = attendanceReport.filter(entry =>
+        (!selectedDate || entry.date === selectedDate) && (!selectedClass || entry.class === selectedClass)
+    );
+
+    updateReportContent(filteredAttendance);
+}
+
+function updateReportByDate(selectElement) {
+    updateReportByDateAndClass();
+}
+
+function updateReportByClass(selectElement) {
+    updateReportByDateAndClass();
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const logoutButton = document.getElementById("logout");
+
+    logoutButton.addEventListener("click", function(event) {
+        event.preventDefault(); 
+
+        window.location.href = "login.html";
+    });
+});
+
+function downloadReport() {
+    const selectedDate = document.getElementById('reportDate').value;
+    const selectedClass = document.getElementById('reportClass').value;
+
+    const attendanceReport = JSON.parse(localStorage.getItem('attendanceReport')) || [];
+
+    const filteredAttendance = attendanceReport.filter(entry =>
+        (!selectedDate || entry.date === selectedDate) && (!selectedClass || entry.class === selectedClass)
+    );
+
+    let csvContent = 'Date,Name,Gender,Class,Status\n';
+    filteredAttendance.forEach(student => {
+        csvContent += `${student.date},${student.name},${student.gender},${student.class},${student.status}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const link = document.createElement('a');
+    if (link.download !== undefined) { 
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'attendance_report.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click(); 
+        document.body.removeChild(link); 
+    } else {
+        alert('Sorry, your browser does not support downloading files.');
+    }
+}
+
+        const addClassForm = document.getElementById('addClassForm');
+        addClassForm.addEventListener('submit', handleAddClassForm);
+
+    </script>
+
+</body>
+
+</html>
